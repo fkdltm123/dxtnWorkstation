@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.*;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,10 +15,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Member extends BaseTimeEntity {
 	
+//	@GeneratedValue(generator="uuid2")
+//	@GenericGenerator(name="uuid2", strategy="uuid2")
+//	@Column(name="memberId", columnDefinition="BINARY(16)")
+//	private UUID memberId;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(nullable = false)
-	private Long memberId;
+	@Column(length = 20, nullable = false, unique = true)
+	private String memberId;
+	
+	@Column(length = 20, nullable = false)
+	private String memberPassword;
+	
+	@Column(length = 5, nullable = false, unique = true)
+	private String memberNo;
 	
 	@Column(length = 10, nullable = false)
 	private String firstName;
@@ -27,34 +35,37 @@ public class Member extends BaseTimeEntity {
 	@Column(length = 10, nullable = false)
 	private String lastName;
 	
-	@Column(length = 8)
-	private String dateOfBirth;
+	@Column(length = 13, nullable = false, unique = true)
+	private String residentId;
 	
-	@Column(length = 100)
+	@Column(length = 100, nullable = false)
 	private String email;
 	
-	@Column(length = 11)
+	@Column(length = 11, nullable = false)
 	private String phoneNo;
 	
-	@Column(length = 10)
+	@Column(length = 10, nullable = false)
 	private String address1;
 	
-	@Column(length = 10)
+	@Column(length = 10, nullable = false)
 	private String address2;
 	
-	@Column(length = 10)
-	private String address3;
-	
-	@Column(length = 100)
+	@Column(length = 100, nullable = false)
 	private String addressDetail;
 	
-	@Column(length = 3)
+	@Column(length = 2, nullable = false)
 	private int departmentNo;
 	
-	@Column(length = 3)
+	@Column(length = 2, nullable = false)
 	private int rankNo;
 	
-	@Column
+	@Column(length = 8, nullable = false)
 	private Date hireDate;
+
+	@Column(length = 8)
+	private Date quitDate;
+	
+	@Column(length = 1, nullable = false)
+	private char workingYn;
 	
 }
