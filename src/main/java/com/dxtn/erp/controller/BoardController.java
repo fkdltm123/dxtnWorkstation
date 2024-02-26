@@ -4,9 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class boardController {
+public class BoardController {
 	@GetMapping("/board")
 	public String boardMain() {
-		return "/boardMain";
+		return "boardViews/boardMain";
 	}
 }
