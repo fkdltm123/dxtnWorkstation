@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class boardEntity {
+public class Board {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int boardId;
@@ -33,10 +33,10 @@ public class boardEntity {
 	private int boardViewCount;
 	//등록일자
 	@Column(length = 20, nullable = false)
-	private String boardRegdate;
+	private Date boardRegdate;
 	//수정일자
 	@Column(length = 20, nullable = true)
-	private String boardUpdatedate;
+	private Date boardUpdatedate;
 	//작성자(외래키)
 	@Column(length = 20, nullable = false, unique = true)
 	private String memberId;
