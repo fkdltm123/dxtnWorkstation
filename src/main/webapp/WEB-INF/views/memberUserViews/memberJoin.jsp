@@ -10,6 +10,66 @@
 <meta charset="UTF-8">
 <title>DXTN Workstation Project</title>
 </head>
+<script>
+
+	function checkPassword(){
+		const password = $('#inputMemberPassword').val();
+		const passwordChk = $('#inputMemberPasswordCheck').val();
+		
+		if(password === null || password === '' || passwordChk === null || passwordChk === ''){
+			return false;
+		} else if(password !== passwordChk){
+			return false;
+		}
+		return true;
+	}
+	
+	async function joinMember(){
+		
+		if(!checkPassword()){
+			alert('패스워드를 확인해주세요');
+			return false;
+		};
+		
+		const data = {
+				memberId : $('#inputMemberId').val(),
+				memberPassword : $('#inputMemberPassword').val(),
+				memberPasswordCheck : $('#inputMemberPasswordCheck').val(),
+				lastName : $('#inputLastName').val(),
+				firstName : $('#inputFirstName').val(),
+				residentId : $('#inputResidentId').val(),
+				phoneNo : $('#inputPhoneNo').val(),
+				email : $('#inputEmail').val(),
+				address1 : $('#inputAddress1').val(),
+				address2 : $('#inputAddress2').val(),
+				addressDetail : $('#inputAddressDetail').val(),
+				hireDate : $('#inputHireDate').val(),
+				departmentNo : $('#inputDepartmentNo').val(),
+				rankNo : $('#inputRankNo').val(),
+		};
+		
+		const response = await fetch('joinMember', {
+			method: 'POST',
+			headers: {
+				'Content-Type' : 'application/json',
+			},
+			body: JSON.stringify(data),
+		});
+		if (response.status === 200){
+			callBackJoinMember(await response.json());
+		} else{
+			alert('fail');
+		}
+	}
+	
+	function callBackJoinMember(response){
+		alert(response.msg);
+		if(response.result === "success"){
+			location.href = "login";
+		}
+	}
+
+</script>
 <body>
 	${head}
 	<div style="display: flex">
@@ -29,7 +89,7 @@
 			  </div>
 			  <div class="col-md-4">
 			    <label for="inputMemberPasswordCheck" class="form-label">Password 확인</label>
-			    <input type="password" class="form-control" id="inputMemberPasswordCheck" name="memberPasswordCheck">
+			    <input type="password" class="form-control" id="inputMemberPasswordCheck" name="memberPasswordCheck" onchange="checkPassword();">
 			  </div>
 			  <div class="col-md-4">
 			    <label for="inputLastName" class="form-label">성</label>
@@ -40,8 +100,8 @@
 			    <input type="text" class="form-control" id="inputFirstName" name="firstName">
 			  </div>
 			  <div class="col-md-4">
-			    <label for="inputPhoneNo" class="form-label">주민등록번호</label>
-			    <input type="text" class="form-control" id="inputPhoneNo" name="residentId" placeholder="'-' 제외">
+			    <label for="inputResidentId" class="form-label">주민등록번호</label>
+			    <input type="text" class="form-control" id="inputResidentId" name="residentId" placeholder="'-' 제외">
 			  </div>
 			  <div class="col-md-4">
 			    <label for="inputPhoneNo" class="form-label">전화번호</label>
@@ -68,8 +128,8 @@
 			    <input type="date" class="form-control" id="inputHireDate" name="hireDate">
 			  </div>
 			  <div class="col-md-4">
-			    <label for="inputDepartment" class="form-label">부서</label>
-			    <select id="inputDepartment" class="form-select" name="departmentNo">
+			    <label for="inputDepartmentNo" class="form-label">부서</label>
+			    <select id="inputDepartmentNo" class="form-select" name="departmentNo">
 			      <option value="10" selected>DT 사업본부</option>
 			      <option value="20">Cloud 사업본부</option>
 			      <option value="30">Solution 사업본부</option>
@@ -77,8 +137,8 @@
 			    </select>
 			  </div>
 			  <div class="col-md-4">
-			    <label for="inputRank" class="form-label">직급</label>
-			    <select id="inputRank" class="form-select" name="rankNo">
+			    <label for="inputRankNo" class="form-label">직급</label>
+			    <select id="inputRankNo" class="form-select" name="rankNo">
 			      <option value="10" selected>주임</option>
 			      <option value="20">선임</option>
 			      <option value="30">책임</option>
@@ -90,7 +150,7 @@
 			    </select>
 			  </div>
 			  <div class="col-12">
-			    <button type="submit" class="btn btn-primary">회원가입</button>
+			    <button type="button" onclick="joinMember();" class="btn btn-primary">회원가입</button>
 			  </div>
 			</form>
 		</section>

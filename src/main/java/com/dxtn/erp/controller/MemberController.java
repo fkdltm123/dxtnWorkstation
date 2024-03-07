@@ -1,15 +1,13 @@
 package com.dxtn.erp.controller;
 
-import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,18 +22,17 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@GetMapping("/join")
+	@GetMapping("/joinMember")
 	public ModelAndView joinMember() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("memberUserViews/memberJoin");
 		return mv;
 	}
 	
-	@PostMapping("/join")
-	public void joinMember(@ModelAttribute MemberDto memberDto, BindingResult bindingResult, HttpServletResponse response) throws IOException {
-		//memberService.insertMember(memberDto);
+	@PostMapping("/joinMember")
+	public ResponseEntity<Map<String, Object>> joinMember(@RequestBody MemberDto memberDto) {
 		System.out.println(memberDto.toString());
-		response.sendRedirect("/member/login");
+		return ResponseEntity.ok(memberService.insertMember(memberDto));
 	}
 	
 	@GetMapping("/login")
@@ -46,41 +43,51 @@ public class MemberController {
 	}
 	
 	@PostMapping("/login")
-	public String login(HttpServletRequest request, BindingResult bindingResult) {
+	public ResponseEntity<Map<String, Object>> login(HttpServletRequest request, @RequestBody MemberDto memberDto) {
+		System.out.println("memberId : " + memberDto.getMemberId());
+		System.out.println("memberPassword : " + memberDto.getMemberPassword());
 		Member member = new Member();
-		member.setMemberId(request.getParameter("memberId"));
-		member.setMemberPassword(request.getParameter("memberPassword"));
+		member.setMemberId(memberDto.getMemberId());
+		member.setMemberPassword(memberDto.getMemberPassword());
 		
-		member = memberService.login(member);
+		Map<String, Object> returnMap = memberService.login(member);
 		
-		if(member == null) {
-			bindingResult.reject("loginFail", "가입된 정보가 없습니다.");
-		} else if(member.getMemberNo() == null) {
-			bindingResult.reject("loginFail", "아이디 또는 패스워드를 확인해주세요.");
-		}
+		System.out.println("getMemberId : " + ((Member) returnMap.get("loginMember")).getMemberId());
+		System.out.println("getMemberPassword : " + ((Member) returnMap.get("loginMember")).getMemberPassword());
+		System.out.println("getMemberNo : " + ((Member) returnMap.get("loginMember")).getMemberNo());
 		
-		if(bindingResult.hasErrors()) {
-			return "login";
-		}
 		request.getSession().invalidate();
 		HttpSession session = request.getSession(true);
 		
-		session.setAttribute("memberId", member.getMemberId());
-		session.setAttribute("lastName", member.getLastName());
-		session.setAttribute("firstName", member.getFirstName());
+		session.setAttribute("memberId", ((Member) returnMap.get("loginMember")).getMemberId());
+		session.setAttribute("lastName", ((Member) returnMap.get("loginMember")).getLastName());
+		session.setAttribute("firstName", ((Member) returnMap.get("loginMember")).getFirstName());
+		session.setAttribute("loginMember", returnMap.get("loginMember"));
 		session.setMaxInactiveInterval(60 * 60);	// 1시간
-		
-		return "redirect:/index";
+		return ResponseEntity.ok(returnMap);
 	}
 	
-	@GetMapping("/findMemberId")
-	public Map<String, String> findMemberId(@RequestBody Map<String, String> map) {
-		return memberService.findMemberId(map);
+	@GetMapping("/logout")
+	public ModelAndView logout(HttpServletRequest request, Model model) {
+		ModelAndView mv = new ModelAndView();
+		HttpSession session = request.getSession(true);
+		session.invalidate();
+		mv.setViewName("commonViews/index");
+		return mv;
+	}
+
+	@GetMapping("/findMember")
+	public ModelAndView findMember(Model model) {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("memberUserViews/memberFindInfo");
+		return mv;
 	}
 	
-	@GetMapping("/findMemberPassword")
-	public Map<String, String> findMemberPassword(@RequestBody Map<String, String> map) {
-		return memberService.findMemberPassword(map);
+	@PostMapping("/findMember")
+	public ResponseEntity<Map<String, Object>> findMember(@RequestBody MemberDto memberDto) {
+		System.out.println("findMemberPost");
+		System.out.println(memberDto.toString());
+		return ResponseEntity.ok(memberService.findMember(memberDto));
 	}
 	
 }

@@ -1,6 +1,5 @@
 package com.dxtn.erp.entity;
 
-import java.util.Date;
 
 import javax.persistence.*;
 
@@ -60,10 +59,10 @@ public class Member extends BaseTimeEntity {
 	private int rankNo;
 	
 	@Column(length = 8, nullable = false)
-	private Date hireDate;
+	private String hireDate;
 
 	@Column(length = 8)
-	private Date quitDate;
+	private String quitDate;
 	
 	@Column(length = 1, nullable = false)
 	private char workingYn;

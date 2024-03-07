@@ -1,14 +1,5 @@
 package com.dxtn.erp.dto;
 
-import java.util.Date;
-
-
-
-
-
-
-import javax.persistence.Column;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,5 +42,7 @@ public class MemberDto {
 	private String quitDate;
 
 	private char workingYn;
+	
+	private char findType;
 	
 }

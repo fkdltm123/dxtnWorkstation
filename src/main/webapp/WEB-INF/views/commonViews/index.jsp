@@ -16,6 +16,9 @@
 		${side}
 		<section>
 			<h1>DXTN WORKSTATION PROJECT</h1>
+			<c:if test="${loginMember != null}">
+				${loginMember.memberId} 로그인 성공
+			</c:if>
 		</section>
 	</div>
 	<%-- ${foot} --%>
