@@ -21,19 +21,26 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	@GetMapping("/board")
-	public ModelAndView boardMain() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("boardViews/boardMain");
-		return mv;
-	}
+//	@GetMapping("/board")
+//	public ModelAndView boardMain() {
+//		ModelAndView mv = new ModelAndView();
+//		mv.setViewName("boardViews/boardMain");
+//		return mv;
+//	}
 	
-	@GetMapping("")
+	@GetMapping("/board")
 	public ModelAndView getBoardList(Model model, Board board) {
 		List<Board> boardList = boardService.getBoardList(board);
 		model.addAttribute("boardList", boardList);
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("boardViews/boardMain");
+		return mv;
+	}
+	
+	@GetMapping("/board/boardcreate")
+	public ModelAndView getBoardCreate(Model model, Board board) {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("boardViews/boardCreate");
 		return mv;
 	}
 	
